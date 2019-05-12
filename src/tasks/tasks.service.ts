@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import * as uniqid from 'uniqid';
 
-import { TaskStatus } from './task.interface';
+import { TaskStatus, Task } from './task.interface';
 
 @Injectable()
 export class TasksService {
   private tasks = [];
 
-  async getAllTasks() {
+  async getAllTasks(): Promise<Task[]> {
     return this.tasks;
   }
 
-  async createTask(description: string) {
+  async createTask(description: string): Promise<Task> {
     const task = {
       id: uniqid(),
       description,
