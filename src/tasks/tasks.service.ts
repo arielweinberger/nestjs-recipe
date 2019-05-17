@@ -6,11 +6,11 @@ import * as uuid from 'uuid/v1';
 export class TasksService {
   private tasks: Task[] = [];
 
-  async getAllTasks(): Promise<Task[]> {
+  getAllTasks(): Task[] {
     return this.tasks;
   }
 
-  async createTask(title: string, description: string): Promise<Task> {
+  createTask(title: string, description: string): Task {
     const task: Task = {
       id: uuid(),
       title,
