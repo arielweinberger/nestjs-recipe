@@ -3,12 +3,15 @@ import { Task } from './task.entity';
 import { GetTasksFilterDto } from '../dto/get-tasks-filter.dto';
 import { CreateTaskDto } from '../dto/create-task.dto';
 import { TaskStatus } from '../task-status.interface';
+import { User } from '../../auth/entities/user.entity';
+import { NotFoundException } from '@nestjs/common';
 
 @EntityRepository(Task)
 export class TaskRepository extends Repository<Task> {
-  async getTasksWithFilters(filterDto: GetTasksFilterDto): Promise<Task[]> {
+  async getTasksWithFilters(filterDto: GetTasksFilterDto, userId: number): Promise<Task[]> {
     const { status, search } = filterDto;
-    const query = await this.createQueryBuilder('task');
+    const query = await this.createQueryBuilder('task')
+      .where('task.userId = :userId', { userId });
 
     if (status) {
       query.andWhere('task.status = :status', { status });
@@ -22,15 +25,25 @@ export class TaskRepository extends Repository<Task> {
     return tasks;
   }
 
-  async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
-    const { title, description } = createTaskDto;
+  async createTask(createTaskDto: CreateTaskDto) {
+    const { title, description, user } = createTaskDto;
 
     const task = new Task();
     task.title = title;
     task.description = description;
     task.status = TaskStatus.OPEN;
+    task.user = user;
 
-    await task.save();
-    return task;
+    return task.save();
+  }
+
+  async findOneOrThrow(taskId: number, userId: number) {
+    const found = await this.findOne({ where: { id: taskId, userId } });
+
+    if (!found) {
+      throw new NotFoundException();
+    }
+
+    return found;
   }
 }

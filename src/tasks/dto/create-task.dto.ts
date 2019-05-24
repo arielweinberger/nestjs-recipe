@@ -1,4 +1,5 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsInstance, IsOptional } from 'class-validator';
+import { User } from '../../auth/entities/user.entity';
 
 export class CreateTaskDto {
   @IsNotEmpty()
@@ -6,4 +7,8 @@ export class CreateTaskDto {
 
   @IsNotEmpty()
   description: string;
+
+  @IsOptional()
+  @IsInstance(User)
+  user?: User;
 }

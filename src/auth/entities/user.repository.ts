@@ -1,12 +1,12 @@
 import { Repository, EntityRepository } from 'typeorm';
 import { User } from './user.entity';
-import { UserCredentialsDto } from '../dto/user-credentials.dto';
+import { AuthCredentialsDto } from '../dto/auth-credentials.dto';
 import { ConflictException, UnauthorizedException } from '@nestjs/common';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
-  async createUser(userCredentialsDto: UserCredentialsDto) {
-    const { username, password } = userCredentialsDto;
+  async createUser(authCredentialsDto: AuthCredentialsDto) {
+    const { username, password } = authCredentialsDto;
 
     if (await this.getUserByUsername(username)) {
       throw new ConflictException(`User "${username}" already exists`);
@@ -18,8 +18,8 @@ export class UserRepository extends Repository<User> {
     await user.save();
   }
 
-  async validateUserCredentials(userCredentialsDto: UserCredentialsDto) {
-    const { username, password } = userCredentialsDto;
+  async validateUserCredentials(authCredentialsDto: AuthCredentialsDto) {
+    const { username, password } = authCredentialsDto;
     const user = await this.getUserByUsername(username);
 
     if (!user || !user.validatePassword(password)) {
