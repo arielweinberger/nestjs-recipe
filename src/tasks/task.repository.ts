@@ -1,9 +1,9 @@
 import { Repository, EntityRepository } from 'typeorm';
 import { Task } from './task.entity';
-import { GetTasksFilterDto } from '../dto/get-tasks-filter.dto';
-import { CreateTaskDto } from '../dto/create-task.dto';
-import { TaskStatus } from '../task-status.interface';
-import { User } from '../../auth/entities/user.entity';
+import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
+import { CreateTaskDto } from './dto/create-task.dto';
+import { TaskStatus } from './task-status.enum';
+import { User } from '../auth/user.entity';
 import { NotFoundException } from '@nestjs/common';
 
 @EntityRepository(Task)
@@ -35,15 +35,5 @@ export class TaskRepository extends Repository<Task> {
     task.user = user;
 
     return task.save();
-  }
-
-  async findOneOrThrow(taskId: number, userId: number) {
-    const found = await this.findOne({ where: { id: taskId, userId } });
-
-    if (!found) {
-      throw new NotFoundException();
-    }
-
-    return found;
   }
 }

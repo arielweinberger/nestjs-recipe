@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { TaskStatus } from './task-status.interface';
+import { TaskStatus } from './task-status.enum';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Task } from './entities/task.entity';
-import { TaskRepository } from './entities/task.repository';
-import { User } from '../auth/entities/user.entity';
+import { Task } from './task.entity';
+import { TaskRepository } from './task.repository';
+import { User } from '../auth/user.entity';
 
 @Injectable()
 export class TasksService {
@@ -17,12 +17,18 @@ export class TasksService {
     return this.taskRepository.find({ where: { userId: user.id } });
   }
 
-  async getTasksWithFilters(filterDto: GetTasksFilterDto, user: User) {
+  async getTasksWithFilters(filterDto: GetTasksFilterDto, user: User): Promise<Task[]> {
     return this.taskRepository.getTasksWithFilters(filterDto, user.id);
   }
 
   async getTaskById(taskId: number, user: User): Promise<Task> {
-    return this.taskRepository.findOneOrThrow(taskId, user.id);
+    const found = await this.taskRepository.findOne({ where: { id: taskId, userId: user.id } });
+
+    if (!found) {
+      throw new NotFoundException(`Task with ID "${taskId}" not found`);
+    }
+
+    return found;
   }
 
   async createTask(createTaskDto: CreateTaskDto): Promise<Task> {
@@ -32,12 +38,12 @@ export class TasksService {
   }
 
   async deleteTask(taskId: number, user: User): Promise<void> {
-    const task = await this.taskRepository.findOneOrThrow(taskId, user.id);
+    const task = await this.getTaskById(taskId, user);
     await this.taskRepository.remove(task);
   }
 
   async updateTaskStatus(taskId: number, status: TaskStatus, user: User): Promise<Task> {
-    const task = await this.taskRepository.findOneOrThrow(taskId, user.id);
+    const task = await this.getTaskById(taskId, user);
     task.status = status;
     await task.save();
     return task;

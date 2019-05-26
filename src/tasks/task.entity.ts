@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, JoinTable } from 'typeorm';
-import { TaskStatus } from '../task-status.interface';
-import { User } from '../../auth/entities/user.entity';
+import { TaskStatus } from './task-status.enum';
+import { User } from '../auth/user.entity';
 
 @Entity()
 export class Task extends BaseEntity {

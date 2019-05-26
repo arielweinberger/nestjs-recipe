@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, Unique, OneToMany } from 'typeorm';
-import { Task } from '../../tasks/entities/task.entity';
+import { Task } from '../tasks/task.entity';
 import { NotFoundException } from '@nestjs/common';
 
 @Entity()
