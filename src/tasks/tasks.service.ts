@@ -12,9 +12,10 @@ export class TasksService {
     @InjectRepository(TaskRepository)
     private taskRepository: TaskRepository,
   ) {}
-  // getAllTasks(): Task[] {
-  //   return this.tasks;
-  // }
+
+  async getAllTasks(): Promise<Task[]> {
+    return this.taskRepository.find();
+  }
 
   // getTasksWithFilters(filterDto: GetTasksFilterDto): Task[] {
   //   const { status, search } = filterDto;
