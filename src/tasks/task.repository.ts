@@ -42,7 +42,7 @@ export class TaskRepository extends Repository<Task> {
   ): Promise<Task> {
     const { title, description } = createTaskDto;
 
-    const task = new Task();
+    const task = this.create();
     task.title = title;
     task.description = description;
     task.status = TaskStatus.OPEN;
