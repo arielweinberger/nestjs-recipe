@@ -1,6 +1,6 @@
 ## NestJS Best Practices Recipe
 
-My name is Ariel Weinberger, and I am the author of the [NestJS Zero to Hero](ttps://www.udemy.com/course/nestjs-zero-to-hero) course. This course has been the go-to resource for learning NestJS since 2020 and has helped **over 120,000 developers** learn NestJS.
+My name is Ariel Weinberger, and I am the author of the [NestJS Zero to Hero](https://www.udemy.com/course/nestjs-zero-to-hero) course. This course has been the go-to resource for learning NestJS since 2020 and has helped **over 120,000 developers** learn NestJS.
 
 <p align="center">
   <img src=".github/assets/nestjs-growth.png" height="400px"/>
